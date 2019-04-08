@@ -288,3 +288,35 @@ ncu -u
 Object.assign(that.$data, that.$options.data())
 ```
 
+
+
+
+
+### element  table  列中的数据循环
+
+```javascript
+<el-table-column prop="position" label="求职职位" show-overflow-tooltip>
+  <template scope="scope">
+    <div v-for='(index,item) in JSON.parse(scope.row.position)'>{{item.dictName}}</div>
+  </template>
+</el-table-column>
+```
+
+
+
+### vue  key的作用
+
+两个相同的组件产生类似的DOM结构，不同的组件产生不同的DOM结构
+
+同一层级的一组节点，他们可以通过唯一的id进行区分
+
+**如果节点类型不同，直接干掉前面的节点，再创建并插入新的节点，不会再比较这个节点以后的子节点了。**
+
+**如果节点类型相同，则会重新设置该节点的属性，从而实现节点的更新。**
+
+**需要使用key来给每个节点做一个唯一标识，Diff算法就可以正确的识别此节点，找到正确的位置区插入新的节点。**
+
+**key的作用主要是为了高效的更新虚拟DOM**
+
+
+

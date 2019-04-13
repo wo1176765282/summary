@@ -28,3 +28,9 @@ document.createElement('nav')
 
 
 
+**文字水平分布**
+
+```
+
+text-align-last: justify;
+```

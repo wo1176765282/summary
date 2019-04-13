@@ -320,3 +320,63 @@ Object.assign(that.$data, that.$options.data())
 
 
 
+## VUE打包字体文件路径问题
+
+> 转载自 <https://www.jianshu.com/p/458fe9cb3490>
+
+根本原理请看：[https://github.com/vuejs-templates/webpack/issues/166](https://link.jianshu.com/?t=https://github.com/vuejs-templates/webpack/issues/166)
+
+在我的项目中遇到的情形是：
+ 打包后，css里加载的font文件路径变成了：rootpath/static/css/static/fonts,
+ 而期望的应该是rootpath/static/fonts。
+ 修改方式：在build/utils的ExtractTextPlugin.extract里加上 publicPath: '../../'：
+
+```javascript
+// generate loader string to be used with extract text plugin
+  function generateLoaders (loader, loaderOptions) {
+    const loaders = [cssLoader]
+    if (loader) {
+      loaders.push({
+        loader: loader + '-loader',
+        options: Object.assign({}, loaderOptions, {
+          sourceMap: options.sourceMap
+        })
+      })
+    }
+
+    // Extract CSS when that option is specified
+    // (which is the case during production build)
+    if (options.extract) {
+      return ExtractTextPlugin.extract({
+        use: loaders,
+        fallback: 'vue-style-loader',
+        publicPath: '../../'  //加我叫我加我加我加我
+      })
+    } else {
+      return ['vue-style-loader'].concat(loaders)
+    }
+  }
+```
+
+# 问题2
+
+更改config/index.js中生产模式下（build）的assetsPublicPth, 原本为 /, 改为 ./ 。
+
+``` JavaScript
+build: {
+    index: path.resolve(__dirname, '../dist/index.html'),
+    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsSubDirectory: 'static',
+    assetsPublicPath: './',         //改这里
+    ....
+}
+```
+
+
+
+
+
+**创建vue项目不能驼峰命名！**
+
+
+
